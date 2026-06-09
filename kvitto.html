@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kvitto">
+<title>Kvitto</title>
+<style>
+:root {
+  --bg: #f2f1ed;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.09);
+  --text: #111111;
+  --muted: #888888;
+  --accent: #111111;
+  --green: #1a7a4a;
+  --green-bg: #edf7f2;
+  --red: #c0392b;
+  --red-bg: #fdecea;
+  --radius: 16px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; }
+body { min-height: 100%; background: var(--bg); font-family: -apple-system, 'SF Pro Text', sans-serif; color: var(--text); }
+
+.shell {
+  max-width: 430px; margin: 0 auto;
+  padding: calc(var(--safe-top) + 18px) 16px calc(var(--safe-bottom) + 32px);
+}
+
+/* header */
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.app-title { font-size: 20px; font-weight: 700; letter-spacing: -.4px; }
+.auth-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  border-radius: 20px; padding: 6px 12px; border: none; cursor: pointer;
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+  transition: opacity .15s;
+}
+.auth-pill:active { opacity: .7; }
+.auth-pill.signed-out { background: #4285F4; color: #fff; }
+.auth-pill.signed-in { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.auth-dot { width: 7px; height: 7px; border-radius: 50%; background: #34a853; flex-shrink: 0; }
+
+/* cam zone */
+.cam-zone {
+  width: 100%; aspect-ratio: 3/4;
+  background: var(--surface); border-radius: var(--radius);
+  border: 1.5px dashed rgba(0,0,0,0.15);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; position: relative; overflow: hidden;
+  margin-bottom: 14px; transition: border-color .2s;
+}
+.cam-zone:active { border-color: var(--accent); }
+.cam-zone img.preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cam-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+.cam-hint .ico { font-size: 40px; }
+.cam-hint span { font-size: 13px; color: var(--muted); }
+.cam-zone.filled .cam-hint { display: none; }
+.retake-bar { display: none; position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.5); padding: 10px; justify-content: center; }
+.cam-zone.filled .retake-bar { display: flex; }
+.retake-btn { background: rgba(255,255,255,.92); border: none; border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+/* cards */
+.card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; }
+.card-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .3px; }
+.field input {
+  font-size: 15px; padding: 8px 0;
+  border: none; border-bottom: 1px solid var(--border);
+  background: transparent; color: var(--text);
+  font-family: inherit; -webkit-appearance: none; border-radius: 0;
+  width: 100%;
+}
+.field input:focus { outline: none; border-bottom-color: var(--accent); }
+
+/* participants */
+.p-chips { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+.p-chip { display: flex; align-items: center; gap: 10px; background: var(--bg); border-radius: 12px; padding: 8px 10px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.p-text { flex: 1; }
+.p-text .pn { font-size: 13px; font-weight: 600; }
+.p-text .pc { font-size: 12px; color: var(--muted); }
+.p-rm { background: none; border: none; font-size: 20px; color: var(--muted); cursor: pointer; padding: 0 4px; line-height: 1; }
+.add-row { display: grid; grid-template-columns: 1fr 1fr 38px; gap: 8px; align-items: end; }
+.plus-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 1px; font-family: inherit; }
+.plus-btn:active { opacity: .7; }
+
+/* send */
+.send-btn {
+  width: 100%; padding: 17px; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700;
+  font-family: inherit; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 8px; margin-top: 6px; letter-spacing: -.2px;
+  transition: opacity .15s;
+}
+.send-btn:active { opacity: .75; }
+.send-btn:disabled { opacity: .3; cursor: default; }
+
+.status { display: none; text-align: center; font-size: 13px; font-weight: 600; padding: 12px 16px; border-radius: 12px; margin-top: 10px; }
+.status.ok { background: var(--green-bg); color: var(--green); display: block; }
+.status.err { background: var(--red-bg); color: var(--red); display: block; }
+.status.info { background: #f0f0f0; color: #555; display: block; font-weight: 400; }
+
+#offCanvas { display: none; }
+#fileIn { display: none; }
+
+/* setup screen */
+.setup-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 32px); }
+.setup-screen.open { display: block; }
+.setup-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -.4px; }
+.setup-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+.setup-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 14px; }
+.setup-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.setup-card p { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
+.setup-card code { font-size: 12px; background: var(--bg); border-radius: 6px; padding: 2px 6px; font-family: 'SF Mono', monospace; }
+.setup-input { width: 100%; font-size: 14px; padding: 11px 13px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; margin-top: 4px; }
+.setup-input:focus { outline: none; border-color: var(--accent); }
+.setup-save { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
+.setup-save:active { opacity: .75; }
+.step-badge { display: inline-block; background: var(--accent); color: #fff; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; font-size: 12px; font-weight: 700; margin-right: 8px; }
+</style>
+</head>
+<body>
+<canvas id="offCanvas"></canvas>
+<input type="file" id="fileIn" accept="image/*" capture="environment">
+
+<!-- SETUP SCREEN -->
+<div class="setup-screen" id="setupScreen">
+  <div style="max-width:400px;margin:0 auto">
+    <div style="margin-bottom:20px">
+      <button onclick="closeSetup()" style="background:none;border:none;font-size:15px;color:var(--muted);cursor:pointer;font-family:inherit;padding:0">← Tillbaka</button>
+    </div>
+    <div class="setup-title">Google-inställningar</div>
+    <div class="setup-sub">För att skicka mail automatiskt behöver du ett Google Cloud Client ID. Följ stegen nedan — det tar ca 5 minuter.</div>
+
+    <div class="setup-card">
+      <h3><span class="step-badge">1</span>Skapa projekt</h3>
+      <p>Gå till <strong>console.cloud.google.com</strong> → Nytt projekt → döp det till "Kvitto".</p>
+    </div>
+
+    <div class="setup-card">
+      <h3><span class="step-badge">2</span>Aktivera Gmail API</h3>
+      <p>Sök efter "Gmail API" i API-biblioteket och klicka <strong>Aktivera</strong>.</p>
+    </div>
+
+    <div class="setup-card">
+      <h3><span class="step-badge">3</span>OAuth-samtyckesskärm</h3>
+      <p>Välj <strong>Extern</strong> → fyll i appnamn "Kvitto" → lägg till ditt Gmail som testanvändare.</p>
+    </div>
+
+    <div class="setup-card">
+      <h3><span class="step-badge">4</span>Skapa OAuth-klient</h3>
+      <p>Credentials → Skapa → OAuth-klient-ID → typ: <code>Webbapp</code>.</p>
+      <p>Under <strong>Auktoriserade JavaScript-ursprung</strong>, lägg till:<br>
+      <code>https://claude.ai</code> (om du testar härifrån)<br>
+      och adressen dit du sparat HTML-filen.</p>
+    </div>
+
+    <div class="setup-card">
+      <h3><span class="step-badge">5</span>Klistra in Client ID</h3>
+      <p>Kopiera ditt <strong>Client ID</strong> (slutar på <code>.apps.googleusercontent.com</code>) och klistra in nedan.</p>
+      <input class="setup-input" type="text" id="clientIdInput" placeholder="xxxx.apps.googleusercontent.com">
+    </div>
+
+    <button class="setup-save" onclick="saveClientId()">Spara &amp; logga in med Google</button>
+    <div class="status" id="setupStatus" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="shell" id="mainApp">
+  <header>
+    <div class="app-title">📄 Kvitto</div>
+    <button class="auth-pill signed-out" id="authBtn" onclick="handleAuth()">
+      <span id="authBtnText">Koppla Gmail</span>
+    </button>
+  </header>
+
+  <div class="cam-zone" id="camZone" onclick="handleCamTap(event)">
+    <div class="cam-hint">
+      <div class="ico">📷</div>
+      <span>Tryck för att fotografera kvittot</span>
+    </div>
+    <div class="retake-bar">
+      <button class="retake-btn" onclick="retake(event)">Ta om bild</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Kvittoinformation</div>
+    <div class="grid2" style="margin-bottom:14px">
+      <div class="field"><label>Affär / Restaurang</label><input type="text" id="store" placeholder="ICA Maxi" autocomplete="off"></div>
+      <div class="field"><label>Datum</label><input type="date" id="rdate"></div>
+    </div>
+    <div class="field"><label>Beskrivning / Syfte</label><input type="text" id="desc" placeholder="t.ex. Kundlunch, Konferens" autocomplete="off"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Deltagare</div>
+    <div class="p-chips" id="pList"></div>
+    <div class="add-row">
+      <div class="field" style="margin:0"><label>Namn</label><input type="text" id="pName" placeholder="Anna Svensson" autocomplete="off"></div>
+      <div class="field" style="margin:0"><label>Företag</label><input type="text" id="pComp" placeholder="AB Företaget" autocomplete="off"></div>
+      <button class="plus-btn" onclick="addP()" aria-label="Lägg till">+</button>
+    </div>
+  </div>
+
+  <button class="send-btn" id="sendBtn" onclick="sendReceipt()">✉️ Skicka till bokföring</button>
+  <div class="status" id="mainStatus"></div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────
+const TO_ADDRESS = 'nbox.lev.1436420@arkivplats.se';
+const SCOPES = 'https://www.googleapis.com/auth/gmail.send';
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let imgDataUrl = null;
+let participants = [];
+let tokenClient = null;
+let accessToken = null;
+let clientId = localStorage.getItem('gClientId') || '';
+
+// ── INIT ──────────────────────────────────────────────────────────────
+document.getElementById('rdate').value = new Date().toISOString().split('T')[0];
+updateAuthUI();
+
+// Load Google Identity Services
+if (clientId) loadGIS();
+
+function loadGIS() {
+  if (document.getElementById('gisScript')) return;
+  const s = document.createElement('script');
+  s.id = 'gisScript';
+  s.src = 'https://accounts.google.com/gsi/client';
+  s.onload = initGIS;
+  document.head.appendChild(s);
+}
+
+function initGIS() {
+  if (!clientId) return;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: SCOPES,
+    callback: (resp) => {
+      if (resp.error) { setMainStatus('Google-inloggning misslyckades: ' + resp.error, 'err'); return; }
+      accessToken = resp.access_token;
+      updateAuthUI();
+      setMainStatus('✓ Gmail kopplat! Fyll i kvittot och tryck Skicka.', 'ok');
+    }
+  });
+}
+
+// ── AUTH UI ───────────────────────────────────────────────────────────
+function updateAuthUI() {
+  const btn = document.getElementById('authBtn');
+  const txt = document.getElementById('authBtnText');
+  if (accessToken) {
+    btn.className = 'auth-pill signed-in';
+    btn.innerHTML = '<div class="auth-dot"></div> Gmail kopplat';
+  } else if (clientId) {
+    btn.className = 'auth-pill signed-out';
+    btn.innerHTML = 'Logga in med Google';
+  } else {
+    btn.className = 'auth-pill signed-out';
+    btn.innerHTML = 'Koppla Gmail';
+  }
+}
+
+function handleAuth() {
+  if (!clientId) {
+    openSetup();
+    return;
+  }
+  if (!tokenClient) { loadGIS(); setTimeout(() => { if (tokenClient) tokenClient.requestAccessToken(); }, 800); return; }
+  if (accessToken) {
+    // sign out
+    google.accounts.oauth2.revoke(accessToken, () => {});
+    accessToken = null;
+    updateAuthUI();
+    setMainStatus('', '');
+    return;
+  }
+  tokenClient.requestAccessToken();
+}
+
+// ── SETUP ─────────────────────────────────────────────────────────────
+function openSetup() {
+  document.getElementById('clientIdInput').value = clientId;
+  document.getElementById('setupScreen').classList.add('open');
+}
+function closeSetup() { document.getElementById('setupScreen').classList.remove('open'); }
+function saveClientId() {
+  const val = document.getElementById('clientIdInput').value.trim();
+  if (!val || !val.includes('.apps.googleusercontent.com')) {
+    const s = document.getElementById('setupStatus');
+    s.textContent = 'Ogiltigt Client ID — det ska sluta på .apps.googleusercontent.com';
+    s.className = 'status err'; return;
+  }
+  clientId = val;
+  localStorage.setItem('gClientId', clientId);
+  closeSetup();
+  loadGIS();
+  setTimeout(() => { if (tokenClient) tokenClient.requestAccessToken(); }, 900);
+}
+
+// ── CAMERA ────────────────────────────────────────────────────────────
+function handleCamTap(e) {
+  if (e.target.closest('.retake-bar')) return;
+  document.getElementById('fileIn').click();
+}
+document.getElementById('fileIn').addEventListener('change', function(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    imgDataUrl = ev.target.result;
+    const zone = document.getElementById('camZone');
+    let old = zone.querySelector('img.preview'); if (old) old.remove();
+    const img = document.createElement('img'); img.className = 'preview'; img.src = imgDataUrl;
+    zone.prepend(img); zone.classList.add('filled');
+  };
+  reader.readAsDataURL(file); this.value = '';
+});
+function retake(e) {
+  e.stopPropagation(); imgDataUrl = null;
+  const zone = document.getElementById('camZone');
+  const img = zone.querySelector('img.preview'); if (img) img.remove();
+  zone.classList.remove('filled');
+}
+
+// ── PARTICIPANTS ──────────────────────────────────────────────────────
+function initials(name) { return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+function addP() {
+  const n = document.getElementById('pName').value.trim();
+  const c = document.getElementById('pComp').value.trim();
+  if (!n) { document.getElementById('pName').focus(); return; }
+  participants.push({name:n, company:c});
+  document.getElementById('pName').value = '';
+  document.getElementById('pComp').value = '';
+  renderP();
+}
+function removeP(i) { participants.splice(i,1); renderP(); }
+function renderP() {
+  document.getElementById('pList').innerHTML = participants.map((p,i) => `
+    <div class="p-chip">
+      <div class="avatar">${initials(p.name)}</div>
+      <div class="p-text"><div class="pn">${p.name}</div>${p.company?`<div class="pc">${p.company}</div>`:''}</div>
+      <button class="p-rm" onclick="removeP(${i})">×</button>
+    </div>`).join('');
+}
+document.getElementById('pName').addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();document.getElementById('pComp').focus();} });
+document.getElementById('pComp').addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();addP();} });
+
+// ── STATUS ────────────────────────────────────────────────────────────
+function setMainStatus(msg, type) {
+  const el = document.getElementById('mainStatus');
+  el.textContent = msg; el.className = 'status ' + (type||'');
+  if (!type || !msg) el.style.display = 'none'; else el.style.display = 'block';
+}
+
+// ── COMPOSITE IMAGE ───────────────────────────────────────────────────
+function buildComposite(store, rdate, desc) {
+  return new Promise((resolve, reject) => {
+    const base = new Image();
+    base.onload = () => {
+      const W = base.naturalWidth;
+      const H = base.naturalHeight;
+      const lineH = Math.max(36, W * 0.055);
+      const pad = W * 0.05;
+      const fs = Math.max(26, W * 0.048);
+      const fsS = Math.max(20, W * 0.036);
+      const fsXS = Math.max(16, W * 0.028);
+
+      let panelH = lineH * 1.5; // store + date
+      if (desc) panelH += lineH;
+      if (participants.length > 0) panelH += lineH * (participants.length + 1.2);
+      panelH += pad;
+
+      const canvas = document.getElementById('offCanvas');
+      canvas.width = W; canvas.height = H + panelH;
+      const ctx = canvas.getContext('2d');
+
+      ctx.drawImage(base, 0, 0, W, H);
+
+      // white panel
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, H, W, panelH);
+      ctx.fillStyle = '#e8e8e8';
+      ctx.fillRect(0, H, W, 2);
+
+      let y = H + lineH;
+
+      // store name
+      ctx.fillStyle = '#111111';
+      ctx.font = `700 ${fs}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+      ctx.fillText(store, pad, y);
+
+      // date
+      const dateStr = rdate ? new Date(rdate + 'T12:00:00').toLocaleDateString('sv-SE') : '';
+      ctx.fillStyle = '#666666';
+      ctx.font = `400 ${fsS}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+      const dW = ctx.measureText(dateStr).width;
+      ctx.fillText(dateStr, W - pad - dW, y);
+      y += lineH;
+
+      // desc
+      if (desc) {
+        ctx.fillStyle = '#444444';
+        ctx.font = `400 ${fsS}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+        ctx.fillText(desc, pad, y);
+        y += lineH;
+      }
+
+      // participants
+      if (participants.length > 0) {
+        ctx.fillStyle = '#aaaaaa';
+        ctx.font = `700 ${fsXS}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+        ctx.fillText('DELTAGARE', pad, y);
+        y += lineH;
+        participants.forEach(p => {
+          ctx.fillStyle = '#111111';
+          ctx.font = `600 ${fsS}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+          ctx.fillText(p.name, pad, y);
+          if (p.company) {
+            const nW = ctx.measureText(p.name).width;
+            ctx.fillStyle = '#666666';
+            ctx.font = `400 ${fsS}px -apple-system, SF Pro Text, Helvetica, sans-serif`;
+            ctx.fillText('  ' + p.company, pad + nW, y);
+          }
+          y += lineH;
+        });
+      }
+
+      resolve(canvas.toDataURL('image/jpeg', 0.88));
+    };
+    base.onerror = reject;
+    base.src = imgDataUrl;
+  });
+}
+
+// ── GMAIL SEND ────────────────────────────────────────────────────────
+function makeEmail(to, subject, bodyText, imageB64, filename) {
+  const boundary = 'kvitto_' + Date.now();
+  const mime = [
+    `To: ${to}`,
+    `Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`,
+    'MIME-Version: 1.0',
+    `Content-Type: multipart/mixed; boundary="${boundary}"`,
+    '',
+    `--${boundary}`,
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    btoa(unescape(encodeURIComponent(bodyText))),
+    '',
+    `--${boundary}`,
+    `Content-Type: image/jpeg; name="${filename}"`,
+    'Content-Transfer-Encoding: base64',
+    `Content-Disposition: attachment; filename="${filename}"`,
+    '',
+    imageB64,
+    '',
+    `--${boundary}--`
+  ].join('\r\n');
+
+  return btoa(unescape(encodeURIComponent(mime)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function sendReceipt() {
+  const store = document.getElementById('store').value.trim();
+  const rdate = document.getElementById('rdate').value;
+  const desc  = document.getElementById('desc').value.trim();
+
+  if (!accessToken) {
+    if (!clientId) openSetup();
+    else tokenClient.requestAccessToken();
+    setMainStatus('Logga in med Google först.', 'err'); return;
+  }
+  if (!imgDataUrl) { setMainStatus('Fotografera kvittot först.', 'err'); return; }
+  if (!store)      { setMainStatus('Ange affär eller restaurang.', 'err'); return; }
+  if (!rdate)      { setMainStatus('Ange datum.', 'err'); return; }
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  setMainStatus('Sätter ihop kvittot…', 'info');
+
+  try {
+    const compositeDataUrl = await buildComposite(store, rdate, desc);
+    const dateFormatted = new Date(rdate + 'T12:00:00').toLocaleDateString('sv-SE');
+    const subject = `Kvitto – ${store} – ${dateFormatted}`;
+    const filename = `kvitto_${store.replace(/\s+/g,'_')}_${rdate}.jpg`;
+
+    let bodyLines = [`Affär/restaurang: ${store}`, `Datum: ${dateFormatted}`];
+    if (desc) bodyLines.push(`Beskrivning: ${desc}`);
+    if (participants.length > 0) {
+      bodyLines.push('', 'Deltagare:');
+      participants.forEach(p => bodyLines.push(`  • ${p.name}${p.company?' – '+p.company:''}`));
+    }
+    bodyLines.push('', 'Skickat via Kvitto-appen.');
+    const bodyText = bodyLines.join('\n');
+
+    // Strip data URL prefix to get pure base64
+    const imageB64 = compositeDataUrl.replace(/^data:image\/jpeg;base64,/, '');
+    const raw = makeEmail(TO_ADDRESS, subject, bodyText, imageB64, filename);
+
+    setMainStatus('Skickar…', 'info');
+
+    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ raw })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (res.status === 401) { accessToken = null; updateAuthUI(); throw new Error('Session utgången — logga in igen.'); }
+      throw new Error(err?.error?.message || 'Status ' + res.status);
+    }
+
+    setMainStatus('✅ Kvitto skickat till bokföringen!', 'ok');
+    setTimeout(resetForm, 3500);
+
+  } catch(err) {
+    setMainStatus('Fel: ' + err.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  imgDataUrl = null;
+  participants = [];
+  document.getElementById('store').value = '';
+  document.getElementById('rdate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('desc').value = '';
+  renderP();
+  const zone = document.getElementById('camZone');
+  const img = zone.querySelector('img.preview'); if (img) img.remove();
+  zone.classList.remove('filled');
+  setMainStatus('', '');
+}
+</script>
+</body>
+</html>
