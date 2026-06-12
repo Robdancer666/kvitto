@@ -8,104 +8,87 @@
 <meta name="apple-mobile-web-app-title" content="Kvitto">
 <title>Kvitto</title>
 <style>
-:root {
-  --bg: #f2f1ed;
-  --surface: #ffffff;
-  --border: rgba(0,0,0,0.09);
-  --text: #111111;
-  --muted: #888888;
-  --accent: #111111;
-  --green: #1a7a4a;
-  --green-bg: #edf7f2;
-  --red: #c0392b;
-  --red-bg: #fdecea;
-  --radius: 16px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; }
-body { min-height: 100%; background: var(--bg); font-family: -apple-system, 'SF Pro Text', sans-serif; color: var(--text); }
-.shell { max-width: 430px; margin: 0 auto; padding: calc(var(--safe-top) + 18px) 16px calc(var(--safe-bottom) + 32px); }
-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.app-title { font-size: 20px; font-weight: 700; letter-spacing: -.4px; }
-.auth-pill { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; border-radius: 20px; padding: 6px 12px; border: none; cursor: pointer; font-family: -apple-system, 'SF Pro Text', sans-serif; transition: opacity .15s; }
-.auth-pill:active { opacity: .7; }
-.auth-pill.signed-out { background: #4285F4; color: #fff; }
-.auth-pill.signed-in { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-.auth-dot { width: 7px; height: 7px; border-radius: 50%; background: #34a853; flex-shrink: 0; }
-.cam-zone { width: 100%; aspect-ratio: 3/4; background: var(--surface); border-radius: var(--radius); border: 1.5px dashed rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px; transition: border-color .2s; }
-.cam-zone:active { border-color: var(--accent); }
-.cam-zone img.preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.cam-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
-.cam-hint .ico { font-size: 40px; }
-.cam-hint span { font-size: 13px; color: var(--muted); }
-.cam-zone.filled .cam-hint { display: none; }
-.retake-bar { display: none; position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.5); padding: 10px; justify-content: center; gap: 8px; }
-.cam-zone.filled .retake-bar { display: flex; }
-.retake-btn { background: rgba(255,255,255,.92); border: none; border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.save-local-btn { background: rgba(255,255,255,.92); border: none; border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--green); }
-.upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.upload-btn { padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.upload-btn:active { background: var(--bg); }
-.card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; }
-.card-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field { display: flex; flex-direction: column; gap: 4px; }
-.field label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: .3px; }
-.field input { font-size: 15px; padding: 8px 0; border: none; border-bottom: 1px solid var(--border); background: transparent; color: var(--text); font-family: inherit; -webkit-appearance: none; border-radius: 0; width: 100%; }
-.field input:focus { outline: none; border-bottom-color: var(--accent); }
-.p-chips { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
-.p-chip { display: flex; align-items: center; gap: 10px; background: var(--bg); border-radius: 12px; padding: 8px 10px; }
-.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.p-text { flex: 1; }
-.p-text .pn { font-size: 13px; font-weight: 600; }
-.p-text .pc { font-size: 12px; color: var(--muted); }
-.p-rm { background: none; border: none; font-size: 20px; color: var(--muted); cursor: pointer; padding: 0 4px; line-height: 1; }
-.add-row { display: grid; grid-template-columns: 1fr 1fr 38px; gap: 8px; align-items: end; }
-.plus-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 1px; font-family: inherit; }
-.plus-btn:active { opacity: .7; }
-.quick-list { display: flex; flex-direction: column; gap: 6px; }
-.quick-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: all .15s; }
-.quick-item.selected { background: #111; border-color: #111; }
-.quick-item .q-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
-.quick-item.selected .q-avatar { background: rgba(255,255,255,0.2); border-color: transparent; color: #fff; }
-.quick-item .q-info { flex: 1; }
-.quick-item .q-name { font-size: 13px; font-weight: 600; color: var(--text); transition: color .15s; }
-.quick-item.selected .q-name { color: #fff; }
-.quick-item .q-company { font-size: 12px; color: var(--muted); transition: color .15s; }
-.quick-item.selected .q-company { color: rgba(255,255,255,0.6); }
-.quick-item .q-check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
-.quick-item.selected .q-check { background: #fff; border-color: #fff; }
-.check-mark { display: none; font-size: 11px; color: #111; font-weight: 700; }
-.quick-item.selected .check-mark { display: block; }
-.co-btn { padding: 12px 8px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .15s; text-align: center; }
-.co-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.co-btn:active { opacity: .8; }
-.send-btn { width: 100%; padding: 17px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; letter-spacing: -.2px; transition: opacity .15s; }
-.send-btn:active { opacity: .75; }
-.send-btn:disabled { opacity: .3; cursor: default; }
-.status { display: none; text-align: center; font-size: 13px; font-weight: 600; padding: 12px 16px; border-radius: 12px; margin-top: 10px; }
-.status.ok { background: var(--green-bg); color: var(--green); display: block; }
-.status.err { background: var(--red-bg); color: var(--red); display: block; }
-.status.info { background: #f0f0f0; color: #555; display: block; font-weight: 400; }
-#offCanvas { display: none; }
-#fileIn { display: none; }
-#galleryIn { display: none; }
-#pdfIn { display: none; }
-.setup-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 32px); }
-.setup-screen.open { display: block; }
-.setup-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -.4px; }
-.setup-sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
-.setup-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 14px; }
-.setup-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.setup-card p { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 10px; }
-.setup-card code { font-size: 12px; background: var(--bg); border-radius: 6px; padding: 2px 6px; font-family: 'SF Mono', monospace; }
-.setup-input { width: 100%; font-size: 14px; padding: 11px 13px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; margin-top: 4px; }
-.setup-input:focus { outline: none; border-color: var(--accent); }
-.setup-save { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
-.setup-save:active { opacity: .75; }
-.step-badge { display: inline-block; background: var(--accent); color: #fff; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; font-size: 12px; font-weight: 700; margin-right: 8px; }
+:root{--bg:#f2f1ed;--surface:#fff;--border:rgba(0,0,0,0.09);--text:#111;--muted:#888;--accent:#111;--green:#1a7a4a;--green-bg:#edf7f2;--red:#c0392b;--red-bg:#fdecea;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{min-height:100%;background:var(--bg);font-family:-apple-system,'SF Pro Text',sans-serif;color:var(--text)}
+.shell{max-width:430px;margin:0 auto;padding:calc(var(--safe-top) + 18px) 16px calc(var(--safe-bottom) + 32px)}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.app-title{font-size:20px;font-weight:700;letter-spacing:-.4px}
+.auth-pill{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:20px;padding:6px 12px;border:none;cursor:pointer;font-family:-apple-system,'SF Pro Text',sans-serif;transition:opacity .15s}
+.auth-pill:active{opacity:.7}
+.auth-pill.signed-out{background:#4285F4;color:#fff}
+.auth-pill.signed-in{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.auth-dot{width:7px;height:7px;border-radius:50%;background:#34a853;flex-shrink:0}
+.cam-zone{width:100%;aspect-ratio:3/4;background:var(--surface);border-radius:var(--radius);border:1.5px dashed rgba(0,0,0,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;position:relative;overflow:hidden;margin-bottom:8px;transition:border-color .2s}
+.cam-zone:active{border-color:var(--accent)}
+.cam-zone img.preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cam-hint{display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.cam-hint .ico{font-size:40px}
+.cam-hint span{font-size:13px;color:var(--muted)}
+.cam-zone.filled .cam-hint{display:none}
+.retake-bar{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);padding:10px;justify-content:center;gap:8px}
+.cam-zone.filled .retake-bar{display:flex}
+.retake-btn{background:rgba(255,255,255,.92);border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.save-local-btn{background:rgba(255,255,255,.92);border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--green)}
+.upload-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.upload-btn{padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.upload-btn:active{background:var(--bg)}
+.card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-label{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.3px}
+.field input{font-size:15px;padding:8px 0;border:none;border-bottom:1px solid var(--border);background:transparent;color:var(--text);font-family:inherit;-webkit-appearance:none;border-radius:0;width:100%}
+.field input:focus{outline:none;border-bottom-color:var(--accent)}
+.p-chips{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.p-chip{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:8px 10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-text{flex:1}
+.p-text .pn{font-size:13px;font-weight:600}
+.p-text .pc{font-size:12px;color:var(--muted)}
+.p-rm{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;padding:0 4px;line-height:1}
+.add-row{display:grid;grid-template-columns:1fr 1fr 38px;gap:8px;align-items:end}
+.plus-btn{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:1px;font-family:inherit}
+.plus-btn:active{opacity:.7}
+.quick-list{display:flex;flex-direction:column;gap:6px}
+.quick-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s}
+.quick-item.selected{background:#111;border-color:#111}
+.quick-item .q-avatar{width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.quick-item.selected .q-avatar{background:rgba(255,255,255,0.2);border-color:transparent;color:#fff}
+.quick-item .q-info{flex:1}
+.quick-item .q-name{font-size:13px;font-weight:600;color:var(--text);transition:color .15s}
+.quick-item.selected .q-name{color:#fff}
+.quick-item .q-company{font-size:12px;color:var(--muted);transition:color .15s}
+.quick-item.selected .q-company{color:rgba(255,255,255,0.6)}
+.quick-item .q-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.quick-item.selected .q-check{background:#fff;border-color:#fff}
+.check-mark{display:none;font-size:11px;color:#111;font-weight:700}
+.quick-item.selected .check-mark{display:block}
+.co-btn{padding:12px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;text-align:center}
+.co-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.co-btn:active{opacity:.8}
+.send-btn{width:100%;padding:17px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;letter-spacing:-.2px;transition:opacity .15s}
+.send-btn:active{opacity:.75}
+.send-btn:disabled{opacity:.3;cursor:default}
+.status{display:none;text-align:center;font-size:13px;font-weight:600;padding:12px 16px;border-radius:12px;margin-top:10px}
+.status.ok{background:var(--green-bg);color:var(--green);display:block}
+.status.err{background:var(--red-bg);color:var(--red);display:block}
+.status.info{background:#f0f0f0;color:#555;display:block;font-weight:400}
+#offCanvas,#fileIn,#galleryIn,#pdfIn{display:none}
+.setup-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:100;overflow-y:auto;padding:calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 32px)}
+.setup-screen.open{display:block}
+.setup-title{font-size:22px;font-weight:700;margin-bottom:6px;letter-spacing:-.4px}
+.setup-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:24px}
+.setup-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:14px}
+.setup-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.setup-card p{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:10px}
+.setup-card code{font-size:12px;background:var(--bg);border-radius:6px;padding:2px 6px;font-family:'SF Mono',monospace}
+.setup-input{width:100%;font-size:14px;padding:11px 13px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;margin-top:4px}
+.setup-input:focus{outline:none;border-color:var(--accent)}
+.setup-save{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px}
+.setup-save:active{opacity:.75}
+.step-badge{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;font-size:12px;font-weight:700;margin-right:8px}
 </style>
 </head>
 <body>
@@ -119,7 +102,7 @@ header { display: flex; align-items: center; justify-content: space-between; mar
     <div class="setup-title">Google-inställningar</div>
     <div class="setup-sub">Klistra in ditt Google OAuth Client ID. Du skapar det på console.cloud.google.com under APIs & Services → Google Auth Platform → Clients.</div>
     <div class="setup-card"><h3><span class="step-badge">1</span>Aktivera Gmail API</h3><p>APIs & Services → Library → sök "Gmail API" → Aktivera.</p></div>
-    <div class="setup-card"><h3><span class="step-badge">2</span>Google Auth Platform</h3><p>APIs & Services → Google Auth Platform → Branding (appnamn "Kvitto") → Audience (External, lägg till din Gmail som testanvändare).</p></div>
+    <div class="setup-card"><h3><span class="step-badge">2</span>Google Auth Platform</h3><p>Branding (appnamn "Kvitto") → Audience (External, lägg till din Gmail som testanvändare).</p></div>
     <div class="setup-card"><h3><span class="step-badge">3</span>Skapa Client ID</h3><p>Clients → Create client → Web application → Authorized JavaScript origins: <code>https://Robdancer666.github.io</code></p><input class="setup-input" type="text" id="clientIdInput" placeholder="xxxx.apps.googleusercontent.com"></div>
     <button class="setup-save" onclick="saveClientId()">Spara &amp; logga in med Google</button>
     <div class="status" id="setupStatus" style="margin-top:12px"></div>
@@ -206,8 +189,9 @@ function selectCompany(i){selectedCompany=i;document.getElementById('coBtn0').cl
 function setMainStatus(msg,type){const el=document.getElementById('mainStatus');el.textContent=msg;el.className='status '+(type||'');el.style.display=(!type||!msg)?'none':'block';}
 function getAllParticipants(){const all=[...participants];quickSelected.forEach(i=>all.push(QUICK_PEOPLE[i]));return all;}
 function buildComposite(store,rdate,desc,allP){return new Promise((resolve,reject)=>{const base=new Image();base.onload=()=>{const W=base.naturalWidth,H=base.naturalHeight;const lineH=Math.max(36,W*0.055),pad=W*0.05,fs=Math.max(26,W*0.048),fsS=Math.max(20,W*0.036),fsXS=Math.max(16,W*0.028);let panelH=lineH*1.5;if(desc)panelH+=lineH;if(allP.length>0)panelH+=lineH*(allP.length+1.2);panelH+=pad;const canvas=document.getElementById('offCanvas');canvas.width=W;canvas.height=H+panelH;const ctx=canvas.getContext('2d');ctx.drawImage(base,0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,H,W,panelH);ctx.fillStyle='#e8e8e8';ctx.fillRect(0,H,W,2);let y=H+lineH;ctx.fillStyle='#111111';ctx.font=`700 ${fs}px -apple-system,Helvetica,sans-serif`;ctx.fillText(store,pad,y);const dateStr=rdate?new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE'):'';ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(dateStr,W-pad-ctx.measureText(dateStr).width,y);y+=lineH;if(desc){ctx.fillStyle='#444444';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(desc,pad,y);y+=lineH;}if(allP.length>0){ctx.fillStyle='#aaaaaa';ctx.font=`700 ${fsXS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('DELTAGARE',pad,y);y+=lineH;allP.forEach(p=>{ctx.fillStyle='#111111';ctx.font=`600 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(p.name,pad,y);if(p.company){ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('  '+p.company,pad+ctx.measureText(p.name).width,y);}y+=lineH;});}resolve(canvas.toDataURL('image/jpeg',0.88));};base.onerror=reject;base.src=imgDataUrl;});}
-function makeEmail(to,subject,bodyText,attachB64,filename,mime){const boundary='kvitto_'+Date.now();const parts=[`To: ${to}`,`Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`,'MIME-Version: 1.0',`Content-Type: multipart/mixed; boundary="${boundary}"`,'',`--${boundary}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',btoa(unescape(encodeURIComponent(bodyText))),'',`--${boundary}`,`Content-Type: ${mime}; name="${filename}"`,'Content-Transfer-Encoding: base64',`Content-Disposition: attachment; filename="${filename}"`,''  ,attachB64,'',`--${boundary}--`].join('\r\n');return btoa(unescape(encodeURIComponent(parts))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-async function sendReceipt(){const store=document.getElementById('store').value.trim();const rdate=document.getElementById('rdate').value;const desc=document.getElementById('desc').value.trim();const allP=getAllParticipants();if(!accessToken){if(!clientId)openSetup();else tokenClient.requestAccessToken();setMainStatus('Logga in med Google först.','err');return;}if(!imgDataUrl&&!pdfFile){setMainStatus('Fotografera eller ladda upp ett kvitto först.','err');return;}if(!store){setMainStatus('Ange affär eller restaurang.','err');return;}if(!rdate){setMainStatus('Ange datum.','err');return;}const btn=document.getElementById('sendBtn');btn.disabled=true;setMainStatus('Sätter ihop kvittot…','info');try{const dateFormatted=new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE');const subject=`Kvitto – ${store} – ${dateFormatted}`;let bodyLines=[`Affär/restaurang: ${store}`,`Datum: ${dateFormatted}`];if(desc)bodyLines.push(`Beskrivning: ${desc}`);if(allP.length>0){bodyLines.push('','Deltagare:');allP.forEach(p=>bodyLines.push(`  • ${p.name}${p.company?' – '+p.company:''}`));}bodyLines.push('','Skickat via Kvitto-appen.');const bodyText=bodyLines.join('\n');const toAddress=COMPANIES[selectedCompany].email;let raw;if(pdfFile){const pdfB64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=ev=>res(ev.target.result.replace(/^data:[^;]+;base64,/,''));r.onerror=rej;r.readAsDataURL(pdfFile);});const filename=pdfFile.name||`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.pdf`;raw=makeEmail(toAddress,subject,bodyText,pdfB64,filename,'application/pdf');}else{const compositeDataUrl=await buildComposite(store,rdate,desc,allP);const imageB64=compositeDataUrl.replace(/^data:image\/jpeg;base64,/,'');const filename=`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.jpg`;raw=makeEmail(toAddress,subject,bodyText,imageB64,filename,'image/jpeg');}setMainStatus('Skickar…','info');const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({raw})});if(!res.ok){const err=await res.json().catch(()=>({}));if(res.status===401){accessToken=null;updateAuthUI();throw new Error('Session utgången — logga in igen.');}throw new Error(err?.error?.message||'Status '+res.status);}setMainStatus(`✅ Kvitto skickat till ${COMPANIES[selectedCompany].name}!`,'ok');setTimeout(resetForm,3500);}catch(err){setMainStatus('Fel: '+err.message,'err');}finally{btn.disabled=false;}}
+function buildInfoImage(store,rdate,desc,allP){const W=1200,lineH=52,pad=60,fs=42,fsS=34,fsXS=26;let h=pad+lineH*1.8;if(desc)h+=lineH;if(allP.length>0)h+=lineH*(allP.length+1.5);h+=pad;const canvas=document.getElementById('offCanvas');canvas.width=W;canvas.height=h;const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,h);ctx.fillStyle='#111111';ctx.fillRect(0,0,W,6);let y=pad+lineH;ctx.fillStyle='#111111';ctx.font=`700 ${fs}px -apple-system,Helvetica,sans-serif`;ctx.fillText(store||'—',pad,y);const dateStr=rdate?new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE'):'';ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(dateStr,W-pad-ctx.measureText(dateStr).width,y);y+=lineH;if(desc){ctx.fillStyle='#444444';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(desc,pad,y);y+=lineH;}if(allP.length>0){y+=lineH*0.4;ctx.fillStyle='#aaaaaa';ctx.font=`700 ${fsXS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('DELTAGARE',pad,y);y+=lineH;allP.forEach(p=>{ctx.fillStyle='#111111';ctx.font=`600 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(p.name,pad,y);if(p.company){const nW=ctx.measureText(p.name).width;ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('  '+p.company,pad+nW,y);}y+=lineH;});}return canvas.toDataURL('image/jpeg',0.92).replace(/^data:image\/jpeg;base64,/,'');}
+function makeEmail(to,subject,bodyText,attachments){const boundary='kvitto_'+Date.now();const parts=[`To: ${to}`,`Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`,'MIME-Version: 1.0',`Content-Type: multipart/mixed; boundary="${boundary}"`,'',`--${boundary}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',btoa(unescape(encodeURIComponent(bodyText)))];attachments.forEach(a=>{parts.push('',`--${boundary}`,`Content-Type: ${a.mime}; name="${a.filename}"`,'Content-Transfer-Encoding: base64',`Content-Disposition: attachment; filename="${a.filename}"`, '',a.b64);});parts.push('',`--${boundary}--`);return btoa(unescape(encodeURIComponent(parts.join('\r\n')))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+async function sendReceipt(){const store=document.getElementById('store').value.trim();const rdate=document.getElementById('rdate').value;const desc=document.getElementById('desc').value.trim();const allP=getAllParticipants();if(!accessToken){if(!clientId)openSetup();else tokenClient.requestAccessToken();setMainStatus('Logga in med Google först.','err');return;}if(!imgDataUrl&&!pdfFile){setMainStatus('Fotografera eller ladda upp ett kvitto först.','err');return;}if(!store){setMainStatus('Ange affär eller restaurang.','err');return;}if(!rdate){setMainStatus('Ange datum.','err');return;}const btn=document.getElementById('sendBtn');btn.disabled=true;setMainStatus('Sätter ihop kvittot…','info');try{const dateFormatted=new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE');const subject=`Kvitto – ${store} – ${dateFormatted}`;let bodyLines=[`Affär/restaurang: ${store}`,`Datum: ${dateFormatted}`];if(desc)bodyLines.push(`Beskrivning: ${desc}`);if(allP.length>0){bodyLines.push('','Deltagare:');allP.forEach(p=>bodyLines.push(`  • ${p.name}${p.company?' – '+p.company:''}`));}bodyLines.push('','Skickat via Kvitto-appen.');const bodyText=bodyLines.join('\n');const toAddress=COMPANIES[selectedCompany].email;let raw;if(pdfFile){const pdfB64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=ev=>res(ev.target.result.replace(/^data:[^;]+;base64,/,''));r.onerror=rej;r.readAsDataURL(pdfFile);});const pdfFilename=pdfFile.name||`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.pdf`;const infoB64=buildInfoImage(store,rdate,desc,allP);const infoFilename=`deltagare_${store.replace(/\s+/g,'_')}_${rdate}.jpg`;raw=makeEmail(toAddress,subject,bodyText,[{b64:pdfB64,filename:pdfFilename,mime:'application/pdf'},{b64:infoB64,filename:infoFilename,mime:'image/jpeg'}]);}else{const compositeDataUrl=await buildComposite(store,rdate,desc,allP);const imageB64=compositeDataUrl.replace(/^data:image\/jpeg;base64,/,'');const filename=`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.jpg`;raw=makeEmail(toAddress,subject,bodyText,[{b64:imageB64,filename:filename,mime:'image/jpeg'}]);}setMainStatus('Skickar…','info');const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({raw})});if(!res.ok){const err=await res.json().catch(()=>({}));if(res.status===401){accessToken=null;updateAuthUI();throw new Error('Session utgången — logga in igen.');}throw new Error(err?.error?.message||'Status '+res.status);}setMainStatus(`✅ Kvitto skickat till ${COMPANIES[selectedCompany].name}!`,'ok');setTimeout(resetForm,3500);}catch(err){setMainStatus('Fel: '+err.message,'err');}finally{btn.disabled=false;}}
 function resetForm(){imgDataUrl=null;pdfFile=null;participants=[];quickSelected=new Set();document.getElementById('store').value='';document.getElementById('rdate').value=new Date().toISOString().split('T')[0];document.getElementById('desc').value='';document.getElementById('pName').value='Robert Skowronski';document.getElementById('pComp').value='Emperial';renderP();renderQuick();const zone=document.getElementById('camZone');const img=zone.querySelector('img.preview');if(img)img.remove();const lbl=zone.querySelector('.pdf-lbl');if(lbl)lbl.remove();zone.classList.remove('filled');setMainStatus('','');}
 </script>
 </body>
