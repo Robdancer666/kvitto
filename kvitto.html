@@ -34,16 +34,20 @@ header { display: flex; align-items: center; justify-content: space-between; mar
 .auth-pill.signed-out { background: #4285F4; color: #fff; }
 .auth-pill.signed-in { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
 .auth-dot { width: 7px; height: 7px; border-radius: 50%; background: #34a853; flex-shrink: 0; }
-.cam-zone { width: 100%; aspect-ratio: 3/4; background: var(--surface); border-radius: var(--radius); border: 1.5px dashed rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 14px; transition: border-color .2s; }
+.cam-zone { width: 100%; aspect-ratio: 3/4; background: var(--surface); border-radius: var(--radius); border: 1.5px dashed rgba(0,0,0,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px; transition: border-color .2s; }
 .cam-zone:active { border-color: var(--accent); }
 .cam-zone img.preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .cam-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
 .cam-hint .ico { font-size: 40px; }
 .cam-hint span { font-size: 13px; color: var(--muted); }
 .cam-zone.filled .cam-hint { display: none; }
-.retake-bar { display: none; position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.5); padding: 10px; justify-content: center; }
+.retake-bar { display: none; position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.5); padding: 10px; justify-content: center; gap: 8px; }
 .cam-zone.filled .retake-bar { display: flex; }
 .retake-btn { background: rgba(255,255,255,.92); border: none; border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.save-local-btn { background: rgba(255,255,255,.92); border: none; border-radius: 20px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--green); }
+.upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.upload-btn { padding: 10px 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.upload-btn:active { background: var(--bg); }
 .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; }
 .card-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -61,6 +65,20 @@ header { display: flex; align-items: center; justify-content: space-between; mar
 .add-row { display: grid; grid-template-columns: 1fr 1fr 38px; gap: 8px; align-items: end; }
 .plus-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); border: none; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 1px; font-family: inherit; }
 .plus-btn:active { opacity: .7; }
+.quick-list { display: flex; flex-direction: column; gap: 6px; }
+.quick-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: all .15s; }
+.quick-item.selected { background: #111; border-color: #111; }
+.quick-item .q-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
+.quick-item.selected .q-avatar { background: rgba(255,255,255,0.2); border-color: transparent; color: #fff; }
+.quick-item .q-info { flex: 1; }
+.quick-item .q-name { font-size: 13px; font-weight: 600; color: var(--text); transition: color .15s; }
+.quick-item.selected .q-name { color: #fff; }
+.quick-item .q-company { font-size: 12px; color: var(--muted); transition: color .15s; }
+.quick-item.selected .q-company { color: rgba(255,255,255,0.6); }
+.quick-item .q-check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s; }
+.quick-item.selected .q-check { background: #fff; border-color: #fff; }
+.check-mark { display: none; font-size: 11px; color: #111; font-weight: 700; }
+.quick-item.selected .check-mark { display: block; }
 .co-btn { padding: 12px 8px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all .15s; text-align: center; }
 .co-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .co-btn:active { opacity: .8; }
@@ -73,6 +91,8 @@ header { display: flex; align-items: center; justify-content: space-between; mar
 .status.info { background: #f0f0f0; color: #555; display: block; font-weight: 400; }
 #offCanvas { display: none; }
 #fileIn { display: none; }
+#galleryIn { display: none; }
+#pdfIn { display: none; }
 .setup-screen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 100; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 32px); }
 .setup-screen.open { display: block; }
 .setup-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -.4px; }
@@ -91,6 +111,8 @@ header { display: flex; align-items: center; justify-content: space-between; mar
 <body>
 <canvas id="offCanvas"></canvas>
 <input type="file" id="fileIn" accept="image/*" capture="environment">
+<input type="file" id="galleryIn" accept="image/*">
+<input type="file" id="pdfIn" accept="application/pdf">
 <div class="setup-screen" id="setupScreen">
   <div style="max-width:400px;margin:0 auto">
     <div style="margin-bottom:20px"><button onclick="closeSetup()" style="background:none;border:none;font-size:15px;color:var(--muted);cursor:pointer;font-family:inherit;padding:0">← Tillbaka</button></div>
@@ -110,7 +132,14 @@ header { display: flex; align-items: center; justify-content: space-between; mar
   </header>
   <div class="cam-zone" id="camZone" onclick="handleCamTap(event)">
     <div class="cam-hint"><div class="ico">📷</div><span>Tryck för att fotografera kvittot</span></div>
-    <div class="retake-bar"><button class="retake-btn" onclick="retake(event)">Ta om bild</button></div>
+    <div class="retake-bar">
+      <button class="retake-btn" onclick="retake(event)">Ta om</button>
+      <button class="save-local-btn" onclick="saveLocally(event)">💾 Spara</button>
+    </div>
+  </div>
+  <div class="upload-row">
+    <button class="upload-btn" onclick="document.getElementById('galleryIn').click()">🖼️ Välj från kamerarullen</button>
+    <button class="upload-btn" onclick="document.getElementById('pdfIn').click()">📄 Ladda upp PDF</button>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
     <button class="co-btn active" id="coBtn0" onclick="selectCompany(0)">The Robbery AB</button>
@@ -128,22 +157,31 @@ header { display: flex; align-items: center; justify-content: space-between; mar
     <div class="card-label">Deltagare</div>
     <div class="p-chips" id="pList"></div>
     <div class="add-row">
-      <div class="field" style="margin:0"><label>Namn</label><input type="text" id="pName" placeholder="Anna Svensson" autocomplete="off"></div>
-      <div class="field" style="margin:0"><label>Företag</label><input type="text" id="pComp" placeholder="AB Företaget" autocomplete="off"></div>
+      <div class="field" style="margin:0"><label>Namn</label><input type="text" id="pName" placeholder="Namn" autocomplete="off"></div>
+      <div class="field" style="margin:0"><label>Företag</label><input type="text" id="pComp" placeholder="Företag" autocomplete="off"></div>
       <button class="plus-btn" onclick="addP()" aria-label="Lägg till">+</button>
     </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Snabbval — representation</div>
+    <div class="quick-list" id="quickList"></div>
   </div>
   <button class="send-btn" id="sendBtn" onclick="sendReceipt()">✉️ Skicka till bokföring</button>
   <div class="status" id="mainStatus"></div>
 </div>
 <script>
 const COMPANIES=[{name:'The Robbery AB',email:'inbox.ver.1436420@arkivplats.se'},{name:'Emperial AB',email:'inbox.ver.1222736@arkivplats.se'}];
+const QUICK_PEOPLE=[{name:'My Söderholm',company:'Emperial'},{name:'Hanna Rafstedt',company:'Emperial'},{name:'Klara Eriksson',company:'Emperial'},{name:'Anderz Wrethov',company:'Emperial'},{name:'Kristofer Strandberg',company:'Emperial'},{name:'Emma Fällman',company:'Emperial'}];
 const SCOPES='https://www.googleapis.com/auth/gmail.send';
-let imgDataUrl=null,participants=[],tokenClient=null,accessToken=null,selectedCompany=0;
+let imgDataUrl=null,pdfFile=null,participants=[],quickSelected=new Set(),tokenClient=null,accessToken=null,selectedCompany=0;
 let clientId=localStorage.getItem('gClientId')||'';
 document.getElementById('rdate').value=new Date().toISOString().split('T')[0];
-updateAuthUI();
+document.getElementById('pName').value='Robert Skowronski';
+document.getElementById('pComp').value='Emperial';
+updateAuthUI();renderQuick();
 if(clientId)loadGIS();
+function renderQuick(){document.getElementById('quickList').innerHTML=QUICK_PEOPLE.map((p,i)=>`<div class="quick-item" id="qi${i}" onclick="toggleQuick(${i})"><div class="q-avatar">${initials(p.name)}</div><div class="q-info"><div class="q-name">${p.name}</div><div class="q-company">${p.company}</div></div><div class="q-check"><span class="check-mark">✓</span></div></div>`).join('');}
+function toggleQuick(i){const el=document.getElementById('qi'+i);if(quickSelected.has(i)){quickSelected.delete(i);el.classList.remove('selected');}else{quickSelected.add(i);el.classList.add('selected');}}
 function loadGIS(){if(document.getElementById('gisScript'))return;const s=document.createElement('script');s.id='gisScript';s.src='https://accounts.google.com/gsi/client';s.onload=initGIS;document.head.appendChild(s);}
 function initGIS(){if(!clientId)return;tokenClient=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:SCOPES,callback:(resp)=>{if(resp.error){setMainStatus('Google-inloggning misslyckades: '+resp.error,'err');return;}accessToken=resp.access_token;updateAuthUI();setMainStatus('✓ Gmail kopplat! Fyll i kvittot och tryck Skicka.','ok');}});}
 function updateAuthUI(){const btn=document.getElementById('authBtn');if(accessToken){btn.className='auth-pill signed-in';btn.innerHTML='<div class="auth-dot"></div> Gmail kopplat';}else if(clientId){btn.className='auth-pill signed-out';btn.innerHTML='Logga in med Google';}else{btn.className='auth-pill signed-out';btn.innerHTML='Koppla Gmail';}}
@@ -151,21 +189,26 @@ function handleAuth(){if(!clientId){openSetup();return;}if(!tokenClient){loadGIS
 function openSetup(){document.getElementById('clientIdInput').value=clientId;document.getElementById('setupScreen').classList.add('open');}
 function closeSetup(){document.getElementById('setupScreen').classList.remove('open');}
 function saveClientId(){const val=document.getElementById('clientIdInput').value.trim();if(!val||!val.includes('.apps.googleusercontent.com')){const s=document.getElementById('setupStatus');s.textContent='Ogiltigt Client ID';s.className='status err';return;}clientId=val;localStorage.setItem('gClientId',clientId);closeSetup();loadGIS();setTimeout(()=>{if(tokenClient)tokenClient.requestAccessToken();},900);}
-function selectCompany(i){selectedCompany=i;document.getElementById('coBtn0').classList.toggle('active',i===0);document.getElementById('coBtn1').classList.toggle('active',i===1);}
 function handleCamTap(e){if(e.target.closest('.retake-bar'))return;document.getElementById('fileIn').click();}
-document.getElementById('fileIn').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{imgDataUrl=ev.target.result;const zone=document.getElementById('camZone');let old=zone.querySelector('img.preview');if(old)old.remove();const img=document.createElement('img');img.className='preview';img.src=imgDataUrl;zone.prepend(img);zone.classList.add('filled');};reader.readAsDataURL(file);this.value='';});
-function retake(e){e.stopPropagation();imgDataUrl=null;const zone=document.getElementById('camZone');const img=zone.querySelector('img.preview');if(img)img.remove();zone.classList.remove('filled');}
+function handleImageFile(file){if(!file)return;pdfFile=null;const reader=new FileReader();reader.onload=ev=>{imgDataUrl=ev.target.result;const zone=document.getElementById('camZone');let old=zone.querySelector('img.preview');if(old)old.remove();const img=document.createElement('img');img.className='preview';img.src=imgDataUrl;zone.prepend(img);zone.classList.add('filled');};reader.readAsDataURL(file);}
+document.getElementById('fileIn').addEventListener('change',function(e){handleImageFile(e.target.files[0]);this.value='';});
+document.getElementById('galleryIn').addEventListener('change',function(e){handleImageFile(e.target.files[0]);this.value='';});
+document.getElementById('pdfIn').addEventListener('change',function(e){const file=e.target.files[0];if(!file)return;pdfFile=file;imgDataUrl=null;const zone=document.getElementById('camZone');let old=zone.querySelector('img.preview');if(old)old.remove();zone.classList.add('filled');let lbl=zone.querySelector('.pdf-lbl');if(!lbl){lbl=document.createElement('div');lbl.className='pdf-lbl';lbl.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:600;color:#444;text-align:center;padding:16px;z-index:2';zone.appendChild(lbl);}lbl.textContent='📄 '+file.name;this.value='';});
+function retake(e){e.stopPropagation();imgDataUrl=null;pdfFile=null;const zone=document.getElementById('camZone');const img=zone.querySelector('img.preview');if(img)img.remove();const lbl=zone.querySelector('.pdf-lbl');if(lbl)lbl.remove();zone.classList.remove('filled');}
+function saveLocally(e){e.stopPropagation();if(!imgDataUrl)return;const a=document.createElement('a');a.href=imgDataUrl;a.download='kvitto_'+new Date().toISOString().split('T')[0]+'.jpg';a.click();}
 function initials(name){return name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);}
-function addP(){const n=document.getElementById('pName').value.trim();const c=document.getElementById('pComp').value.trim();if(!n){document.getElementById('pName').focus();return;}participants.push({name:n,company:c});document.getElementById('pName').value='';document.getElementById('pComp').value='';renderP();}
+function addP(){const n=document.getElementById('pName').value.trim();const c=document.getElementById('pComp').value.trim();if(!n){document.getElementById('pName').focus();return;}participants.push({name:n,company:c});document.getElementById('pName').value='Robert Skowronski';document.getElementById('pComp').value='Emperial';renderP();}
 function removeP(i){participants.splice(i,1);renderP();}
-function renderP(){document.getElementById('pList').innerHTML=participants.map((p,i)=>'<div class="p-chip"><div class="avatar">'+initials(p.name)+'</div><div class="p-text"><div class="pn">'+p.name+'</div>'+(p.company?'<div class="pc">'+p.company+'</div>':'')+'</div><button class="p-rm" onclick="removeP('+i+')">×</button></div>').join('');}
+function renderP(){document.getElementById('pList').innerHTML=participants.map((p,i)=>`<div class="p-chip"><div class="avatar">${initials(p.name)}</div><div class="p-text"><div class="pn">${p.name}</div>${p.company?`<div class="pc">${p.company}</div>`:''}</div><button class="p-rm" onclick="removeP(${i})">×</button></div>`).join('');}
 document.getElementById('pName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('pComp').focus();}});
 document.getElementById('pComp').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addP();}});
-function setMainStatus(msg,type){const el=document.getElementById('mainStatus');el.textContent=msg;el.className='status '+(type||'');if(!type||!msg)el.style.display='none';else el.style.display='block';}
-function buildComposite(store,rdate,desc){return new Promise((resolve,reject)=>{const base=new Image();base.onload=()=>{const W=base.naturalWidth,H=base.naturalHeight;const lineH=Math.max(36,W*0.055),pad=W*0.05,fs=Math.max(26,W*0.048),fsS=Math.max(20,W*0.036),fsXS=Math.max(16,W*0.028);let panelH=lineH*1.5;if(desc)panelH+=lineH;if(participants.length>0)panelH+=lineH*(participants.length+1.2);panelH+=pad;const canvas=document.getElementById('offCanvas');canvas.width=W;canvas.height=H+panelH;const ctx=canvas.getContext('2d');ctx.drawImage(base,0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,H,W,panelH);ctx.fillStyle='#e8e8e8';ctx.fillRect(0,H,W,2);let y=H+lineH;ctx.fillStyle='#111111';ctx.font='700 '+fs+'px -apple-system,Helvetica,sans-serif';ctx.fillText(store,pad,y);const dateStr=rdate?new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE'):'';ctx.fillStyle='#666666';ctx.font='400 '+fsS+'px -apple-system,Helvetica,sans-serif';const dW=ctx.measureText(dateStr).width;ctx.fillText(dateStr,W-pad-dW,y);y+=lineH;if(desc){ctx.fillStyle='#444444';ctx.font='400 '+fsS+'px -apple-system,Helvetica,sans-serif';ctx.fillText(desc,pad,y);y+=lineH;}if(participants.length>0){ctx.fillStyle='#aaaaaa';ctx.font='700 '+fsXS+'px -apple-system,Helvetica,sans-serif';ctx.fillText('DELTAGARE',pad,y);y+=lineH;participants.forEach(p=>{ctx.fillStyle='#111111';ctx.font='600 '+fsS+'px -apple-system,Helvetica,sans-serif';ctx.fillText(p.name,pad,y);if(p.company){const nW=ctx.measureText(p.name).width;ctx.fillStyle='#666666';ctx.font='400 '+fsS+'px -apple-system,Helvetica,sans-serif';ctx.fillText('  '+p.company,pad+nW,y);}y+=lineH;});}resolve(canvas.toDataURL('image/jpeg',0.88));};base.onerror=reject;base.src=imgDataUrl;});}
-function makeEmail(to,subject,bodyText,imageB64,filename){const boundary='kvitto_'+Date.now();const mime=['To: '+to,'Subject: =?UTF-8?B?'+btoa(unescape(encodeURIComponent(subject)))+'?=','MIME-Version: 1.0','Content-Type: multipart/mixed; boundary="'+boundary+'"','','--'+boundary,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',btoa(unescape(encodeURIComponent(bodyText))),'','--'+boundary,'Content-Type: image/jpeg; name="'+filename+'"','Content-Transfer-Encoding: base64','Content-Disposition: attachment; filename="'+filename+'"','',imageB64,'','--'+boundary+'--'].join('\r\n');return btoa(unescape(encodeURIComponent(mime))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-async function sendReceipt(){const store=document.getElementById('store').value.trim();const rdate=document.getElementById('rdate').value;const desc=document.getElementById('desc').value.trim();if(!accessToken){if(!clientId)openSetup();else tokenClient.requestAccessToken();setMainStatus('Logga in med Google först.','err');return;}if(!imgDataUrl){setMainStatus('Fotografera kvittot först.','err');return;}if(!store){setMainStatus('Ange affär eller restaurang.','err');return;}if(!rdate){setMainStatus('Ange datum.','err');return;}const btn=document.getElementById('sendBtn');btn.disabled=true;setMainStatus('Sätter ihop kvittot…','info');try{const compositeDataUrl=await buildComposite(store,rdate,desc);const dateFormatted=new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE');const subject='Kvitto – '+store+' – '+dateFormatted;const filename='kvitto_'+store.replace(/\s+/g,'_')+'_'+rdate+'.jpg';let bodyLines=['Affär/restaurang: '+store,'Datum: '+dateFormatted];if(desc)bodyLines.push('Beskrivning: '+desc);if(participants.length>0){bodyLines.push('','Deltagare:');participants.forEach(p=>bodyLines.push('  • '+p.name+(p.company?' – '+p.company:'')));}bodyLines.push('','Skickat via Kvitto-appen.');const bodyText=bodyLines.join('\n');const imageB64=compositeDataUrl.replace(/^data:image\/jpeg;base64,/,'');const toAddress=COMPANIES[selectedCompany].email;const raw=makeEmail(toAddress,subject,bodyText,imageB64,filename);setMainStatus('Skickar…','info');const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({raw})});if(!res.ok){const err=await res.json().catch(()=>({}));if(res.status===401){accessToken=null;updateAuthUI();throw new Error('Session utgången — logga in igen.');}throw new Error(err?.error?.message||'Status '+res.status);}setMainStatus('✅ Kvitto skickat till '+COMPANIES[selectedCompany].name+'!','ok');setTimeout(resetForm,3500);}catch(err){setMainStatus('Fel: '+err.message,'err');}finally{btn.disabled=false;}}
-function resetForm(){imgDataUrl=null;participants=[];document.getElementById('store').value='';document.getElementById('rdate').value=new Date().toISOString().split('T')[0];document.getElementById('desc').value='';renderP();const zone=document.getElementById('camZone');const img=zone.querySelector('img.preview');if(img)img.remove();zone.classList.remove('filled');setMainStatus('','');}
+function selectCompany(i){selectedCompany=i;document.getElementById('coBtn0').classList.toggle('active',i===0);document.getElementById('coBtn1').classList.toggle('active',i===1);}
+function setMainStatus(msg,type){const el=document.getElementById('mainStatus');el.textContent=msg;el.className='status '+(type||'');el.style.display=(!type||!msg)?'none':'block';}
+function getAllParticipants(){const all=[...participants];quickSelected.forEach(i=>all.push(QUICK_PEOPLE[i]));return all;}
+function buildComposite(store,rdate,desc){return new Promise((resolve,reject)=>{const allP=getAllParticipants();const base=new Image();base.onload=()=>{const W=base.naturalWidth,H=base.naturalHeight;const lineH=Math.max(36,W*0.055),pad=W*0.05,fs=Math.max(26,W*0.048),fsS=Math.max(20,W*0.036),fsXS=Math.max(16,W*0.028);let panelH=lineH*1.5;if(desc)panelH+=lineH;if(allP.length>0)panelH+=lineH*(allP.length+1.2);panelH+=pad;const canvas=document.getElementById('offCanvas');canvas.width=W;canvas.height=H+panelH;const ctx=canvas.getContext('2d');ctx.drawImage(base,0,0,W,H);ctx.fillStyle='#ffffff';ctx.fillRect(0,H,W,panelH);ctx.fillStyle='#e8e8e8';ctx.fillRect(0,H,W,2);let y=H+lineH;ctx.fillStyle='#111111';ctx.font=`700 ${fs}px -apple-system,Helvetica,sans-serif`;ctx.fillText(store,pad,y);const dateStr=rdate?new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE'):'';ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(dateStr,W-pad-ctx.measureText(dateStr).width,y);y+=lineH;if(desc){ctx.fillStyle='#444444';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(desc,pad,y);y+=lineH;}if(allP.length>0){ctx.fillStyle='#aaaaaa';ctx.font=`700 ${fsXS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('DELTAGARE',pad,y);y+=lineH;allP.forEach(p=>{ctx.fillStyle='#111111';ctx.font=`600 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText(p.name,pad,y);if(p.company){ctx.fillStyle='#666666';ctx.font=`400 ${fsS}px -apple-system,Helvetica,sans-serif`;ctx.fillText('  '+p.company,pad+ctx.measureText(p.name).width,y);}y+=lineH;});}resolve(canvas.toDataURL('image/jpeg',0.88));};base.onerror=reject;base.src=imgDataUrl;});}
+function makeEmail(to,subject,bodyText,attachB64,filename,mime){const boundary='kvitto_'+Date.now();const parts=[`To: ${to}`,`Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`,'MIME-Version: 1.0',`Content-Type: multipart/mixed; boundary="${boundary}"`,'',`--${boundary}`,'Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',btoa(unescape(encodeURIComponent(bodyText))),'',`--${boundary}`,`Content-Type: ${mime}; name="${filename}"`,'Content-Transfer-Encoding: base64',`Content-Disposition: attachment; filename="${filename}"`,''  ,attachB64,'',`--${boundary}--`].join('\r\n');return btoa(unescape(encodeURIComponent(parts))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+async function sendReceipt(){const store=document.getElementById('store').value.trim();const rdate=document.getElementById('rdate').value;const desc=document.getElementById('desc').value.trim();const allP=getAllParticipants();if(!accessToken){if(!clientId)openSetup();else tokenClient.requestAccessToken();setMainStatus('Logga in med Google först.','err');return;}if(!imgDataUrl&&!pdfFile){setMainStatus('Fotografera eller ladda upp ett kvitto först.','err');return;}if(!store){setMainStatus('Ange affär eller restaurang.','err');return;}if(!rdate){setMainStatus('Ange datum.','err');return;}const btn=document.getElementById('sendBtn');btn.disabled=true;setMainStatus('Sätter ihop kvittot…','info');try{const dateFormatted=new Date(rdate+'T12:00:00').toLocaleDateString('sv-SE');const subject=`Kvitto – ${store} – ${dateFormatted}`;let bodyLines=[`Affär/restaurang: ${store}`,`Datum: ${dateFormatted}`];if(desc)bodyLines.push(`Beskrivning: ${desc}`);if(allP.length>0){bodyLines.push('','Deltagare:');allP.forEach(p=>bodyLines.push(`  • ${p.name}${p.company?' – '+p.company:''}`));}bodyLines.push('','Skickat via Kvitto-appen.');const bodyText=bodyLines.join('\n');const toAddress=COMPANIES[selectedCompany].email;let raw;if(pdfFile){const pdfB64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=ev=>res(ev.target.result.replace(/^data:[^;]+;base64,/,''));r.onerror=rej;r.readAsDataURL(pdfFile);});const filename=pdfFile.name||`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.pdf`;raw=makeEmail(toAddress,subject,bodyText,pdfB64,filename,'application/pdf');}else{const compositeDataUrl=await buildComposite(store,rdate,desc);const imageB64=compositeDataUrl.replace(/^data:image\/jpeg;base64,/,'');const filename=`kvitto_${store.replace(/\s+/g,'_')}_${rdate}.jpg`;raw=makeEmail(toAddress,subject,bodyText,imageB64,filename,'image/jpeg');}setMainStatus('Skickar…','info');const res=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({raw})});if(!res.ok){const err=await res.json().catch(()=>({}));if(res.status===401){accessToken=null;updateAuthUI();throw new Error('Session utgången — logga in igen.');}throw new Error(err?.error?.message||'Status '+res.status);}setMainStatus(`✅ Kvitto skickat till ${COMPANIES[selectedCompany].name}!`,'ok');setTimeout(resetForm,3500);}catch(err){setMainStatus('Fel: '+err.message,'err');}finally{btn.disabled=false;}}
+function resetForm(){imgDataUrl=null;pdfFile=null;participants=[];quickSelected=new Set();document.getElementById('store').value='';document.getElementById('rdate').value=new Date().toISOString().split('T')[0];document.getElementById('desc').value='';document.getElementById('pName').value='Robert Skowronski';document.getElementById('pComp').value='Emperial';renderP();renderQuick();const zone=document.getElementById('camZone');const img=zone.querySelector('img.preview');if(img)img.remove();const lbl=zone.querySelector('.pdf-lbl');if(lbl)lbl.remove();zone.classList.remove('filled');setMainStatus('','');}
 </script>
 </body>
 </html>
