@@ -156,7 +156,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 <script>
 if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const COMPANIES=[{name:'The Robbery AB',email:'inbox.ver.1436420@arkivplats.se'},{name:'Emperial AB',email:'inbox.ver.1222736@arkivplats.se'}];
-const QUICK_PEOPLE=[{name:'Robert Skowronski',company:''},{name:'Emma Fällman',company:'The Robbery'},{name:'My Söderholm',company:'Emperial'},{name:'Hanna Rafstedt',company:'Emperial'},{name:'Klara Eriksson',company:'Emperial'},{name:'Anderz Wrethov',company:'Emperial'},{name:'Kristofer Strandberg',company:'EWO låtskrivare'}];
+const QUICK_PEOPLE=[{name:'Robert Skowronski',company:''},{name:'Emma Fällman',company:'The Robbery'},{name:'My Söderholm',company:'Emperial'},{name:'Hanna Rafstedt',company:'Emperial'},{name:'Klara Eriksson',company:'Emperial'},{name:'Anderz Wrethov',company:'Emperial'},{name:'Kristofer Strandberg',company:'EWO låtskrivare'},{name:'Jimmy Thörnfeldt',company:'Jimmy T Production'},{name:'Thomas G:son',company:'Gsongs'},{name:'Rikard Morell',company:'låtskrivare'},{name:'Camilla Bjering',company:'Warner Music'}];
 const SCOPES='https://www.googleapis.com/auth/gmail.send';
 let imgDataUrl=null,pdfFile=null,participants=[],quickSelected=new Set(),tokenClient=null,accessToken=null,selectedCompany=0;
 let clientId=localStorage.getItem('gClientId')||'';
